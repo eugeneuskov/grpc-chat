@@ -5,6 +5,10 @@ import (
 	"os"
 )
 
+type App struct {
+	Port string `yaml:"app_port"`
+}
+
 type Database struct {
 	Host     string `yaml:"db_host"`
 	Port     string `yaml:"db_port"`
@@ -14,9 +18,16 @@ type Database struct {
 	SslMode  string `yaml:"db_ssl_mode"`
 }
 
+type Tls struct {
+	Mode     string `yaml:"mode"`
+	CertFile string `yaml:"ssl_cert_file"`
+	KeyFile  string `yaml:"ssl_key_file"`
+}
+
 type Config struct {
-	AppPort string `yaml:"app_port"`
+	App
 	Database
+	Tls
 }
 
 func (c *Config) Init() (*Config, error) {
