@@ -19,7 +19,7 @@ type Database struct {
 }
 
 type Tls struct {
-	Mode     string `yaml:"mode"`
+	Mode     bool   `yaml:"ssl_mode"`
 	CertFile string `yaml:"ssl_cert_file"`
 	KeyFile  string `yaml:"ssl_key_file"`
 }

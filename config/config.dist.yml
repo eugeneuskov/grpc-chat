@@ -1,5 +1,5 @@
 app:
-  app_port: "11011"
+  app_port: ":11011"
 database:
   db_host: "127.0.0.1"
   db_port: "5432"
@@ -8,6 +8,6 @@ database:
   db_name: "-"
   db_ssl_mode: "disable"
 tls:
-  mode: "debug"
+  ssl_mode: false
   ssl_cert_file: "-"
   ssl_key_file: "-"
