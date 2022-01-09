@@ -44,7 +44,12 @@ func connect(user *pb.User) error {
 				break
 			}
 
-			fmt.Printf("%v : %s\n", msg.GetUser().GetName(), msg.GetMessage())
+			switch msg.GetType() {
+			case "message":
+				fmt.Printf("%s: %s\n", msg.GetUser().GetName(), msg.GetMessage())
+			case "chat":
+				fmt.Printf("--- %s is online\n", msg.GetUser().GetName())
+			}
 		}
 	}(stream)
 
@@ -87,6 +92,7 @@ func main() {
 				User:      user,
 				Message:   scanner.Text(),
 				Timestamp: timestamp,
+				Type:      "message",
 			})
 			if err != nil {
 				fmt.Printf("error sendong message: %s\n", err.Error())

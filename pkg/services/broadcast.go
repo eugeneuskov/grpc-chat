@@ -6,6 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
 	"sync"
+	"time"
 )
 
 type connection struct {
@@ -29,10 +30,23 @@ func (b *broadcastService) Connect(request *pb.ConnectRequest, server pb.Broadca
 
 	b.connections = append(b.connections, conn)
 
+	b.send(&pb.Content{
+		Id:        "",
+		User:      request.GetUser(),
+		Message:   "",
+		Timestamp: time.Now().String(),
+		Type:      "chat",
+	})
+
 	return <-conn.error
 }
 
 func (b *broadcastService) SendMessage(_ context.Context, content *pb.Content) (*emptypb.Empty, error) {
+	b.send(content)
+	return &emptypb.Empty{}, nil
+}
+
+func (b *broadcastService) send(content *pb.Content) {
 	wg := sync.WaitGroup{}
 	done := make(chan int)
 
@@ -57,7 +71,6 @@ func (b *broadcastService) SendMessage(_ context.Context, content *pb.Content) (
 	}()
 
 	<-done
-	return &emptypb.Empty{}, nil
 }
 
 func newBroadcastService(s *grpc.Server) {

@@ -20,6 +20,7 @@ message Content {
   User user = 2;
   string message = 3;
   string timestamp = 4;
+  string type = 5;
 }
 
 message ConnectRequest {
