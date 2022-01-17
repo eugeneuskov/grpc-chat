@@ -1,6 +1,6 @@
 package services
 
 type ExternalAuth interface {
-	CheckToken() error
+	CheckToken(token string) error
 	CreateUser() error
 }

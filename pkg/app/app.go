@@ -27,10 +27,12 @@ func NewApplication(config *config.Config) *Application {
 func (a *Application) Run() {
 	println("App starting...")
 	a.dbConnect()
-
-	services.NewServices(repositories.NewRepositories(a.db))
-
 	a.server = server.NewServer(&a.config.Tls, &a.config.App)
+	a.server.InitGrpcServer()
+
+	serviceList := services.NewServices(repositories.NewRepositories(a.db))
+	services.NewGrpcServices(a.server.Grpc).InitServices(serviceList)
+
 	go a.server.Run()
 }
 

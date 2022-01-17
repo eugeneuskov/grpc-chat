@@ -3,7 +3,6 @@ package server
 import (
 	"fmt"
 	"github.com/eugeneuskov/grpc-chat/config"
-	"github.com/eugeneuskov/grpc-chat/pkg/services"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"log"
@@ -23,16 +22,16 @@ func NewServer(tlsConfig *config.Tls, appConfig *config.App) *Server {
 	}
 }
 
-func (s *Server) Run() {
+func (s *Server) InitGrpcServer() {
 	s.Grpc = grpc.NewServer(s.options()...)
+}
 
+func (s *Server) Run() {
 	println(fmt.Sprintf("Server running at %s port", s.appConfig.Port))
 	lis, err := net.Listen("tcp", s.appConfig.Port)
 	if err != nil {
 		log.Fatalf("Failed listen: %s\n", err.Error())
 	}
-
-	services.NewGrpcServices(s.Grpc).InitServices()
 
 	if err = s.Grpc.Serve(lis); err != nil {
 		log.Fatalf("Error occured while running gRPC HTTP2 server: %s\n", err.Error())

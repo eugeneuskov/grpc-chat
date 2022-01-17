@@ -6,9 +6,8 @@ type externalService struct {
 	repository repositories.ExternalAuth
 }
 
-func (e *externalService) CheckToken() error {
-	//TODO implement me
-	panic("implement me")
+func (e *externalService) CheckToken(token string) error {
+	return e.repository.CheckToken(token)
 }
 
 func (e *externalService) CreateUser() error {
