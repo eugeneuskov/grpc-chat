@@ -1,20 +1,13 @@
 package services
 
-import (
-	"google.golang.org/grpc"
-)
+import "github.com/eugeneuskov/grpc-chat/pkg/repositories"
 
-type Service struct {
-	grpcServer *grpc.Server
+type Services struct {
+	ExternalAuth
 }
 
-func NewService(grpcServer *grpc.Server) *Service {
-	return &Service{
-		grpcServer,
+func NewServices(repositories *repositories.Repositories) *Services {
+	return &Services{
+		ExternalAuth: newExternalService(repositories.ExternalAuth),
 	}
-}
-
-func (s *Service) InitServices() {
-	newBroadcastService(s.grpcServer)
-	newExternalService(s.grpcServer)
 }

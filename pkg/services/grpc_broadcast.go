@@ -16,11 +16,11 @@ type connection struct {
 	error  chan error
 }
 
-type broadcastService struct {
+type grpcBroadcastService struct {
 	connections []*connection
 }
 
-func (b *broadcastService) Connect(request *pb.ConnectRequest, server pb.Broadcast_ConnectServer) error {
+func (b *grpcBroadcastService) Connect(request *pb.ConnectRequest, server pb.Broadcast_ConnectServer) error {
 	conn := &connection{
 		stream: server,
 		id:     request.GetUser().GetId(),
@@ -41,12 +41,12 @@ func (b *broadcastService) Connect(request *pb.ConnectRequest, server pb.Broadca
 	return <-conn.error
 }
 
-func (b *broadcastService) SendMessage(_ context.Context, content *pb.Content) (*emptypb.Empty, error) {
+func (b *grpcBroadcastService) SendMessage(_ context.Context, content *pb.Content) (*emptypb.Empty, error) {
 	b.send(content)
 	return &emptypb.Empty{}, nil
 }
 
-func (b *broadcastService) send(content *pb.Content) {
+func (b *grpcBroadcastService) send(content *pb.Content) {
 	wg := sync.WaitGroup{}
 	done := make(chan int)
 
@@ -73,8 +73,8 @@ func (b *broadcastService) send(content *pb.Content) {
 	<-done
 }
 
-func newBroadcastService(s *grpc.Server) {
+func newGrpcBroadcastService(s *grpc.Server) {
 	if s != nil {
-		pb.RegisterBroadcastServer(s, &broadcastService{})
+		pb.RegisterBroadcastServer(s, &grpcBroadcastService{})
 	}
 }

@@ -32,7 +32,7 @@ func (s *Server) Run() {
 		log.Fatalf("Failed listen: %s\n", err.Error())
 	}
 
-	services.NewService(s.Grpc).InitServices()
+	services.NewGrpcServices(s.Grpc).InitServices()
 
 	if err = s.Grpc.Serve(lis); err != nil {
 		log.Fatalf("Error occured while running gRPC HTTP2 server: %s\n", err.Error())

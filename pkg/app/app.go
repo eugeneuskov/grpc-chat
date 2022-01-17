@@ -5,6 +5,7 @@ import (
 	"github.com/eugeneuskov/grpc-chat/config"
 	"github.com/eugeneuskov/grpc-chat/pkg/repositories"
 	"github.com/eugeneuskov/grpc-chat/pkg/server"
+	"github.com/eugeneuskov/grpc-chat/pkg/services"
 	"gorm.io/gorm"
 	"log"
 	"time"
@@ -26,6 +27,9 @@ func NewApplication(config *config.Config) *Application {
 func (a *Application) Run() {
 	println("App starting...")
 	a.dbConnect()
+
+	services.NewServices(repositories.NewRepositories(a.db))
+
 	a.server = server.NewServer(&a.config.Tls, &a.config.App)
 	go a.server.Run()
 }

@@ -1,21 +1,21 @@
 package services
 
-import (
-	"context"
-	"github.com/eugeneuskov/grpc-chat/proto/pb"
-	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/emptypb"
-)
+import "github.com/eugeneuskov/grpc-chat/pkg/repositories"
 
-type externalService struct{}
+type externalService struct {
+	repository repositories.ExternalAuth
+}
 
-func (e *externalService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*emptypb.Empty, error) {
+func (e *externalService) CheckToken() error {
 	//TODO implement me
 	panic("implement me")
 }
 
-func newExternalService(s *grpc.Server) {
-	if s != nil {
-		pb.RegisterExternalServer(s, &externalService{})
-	}
+func (e *externalService) CreateUser() error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func newExternalService(repository repositories.ExternalAuth) *externalService {
+	return &externalService{repository: repository}
 }
