@@ -47,7 +47,9 @@ func (a *Application) dbConnect() {
 	a.sqlDb.SetConnMaxLifetime(time.Hour)
 
 	a.db = db
-	println("DB connected")
+	println("DB connected\nRun migrations...")
+	repositories.Migrate(a.db)
+	println("Migrations completed")
 }
 
 func (a *Application) Shutdown() {
