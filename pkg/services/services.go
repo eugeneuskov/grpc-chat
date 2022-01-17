@@ -16,4 +16,5 @@ func NewService(grpcServer *grpc.Server) *Service {
 
 func (s *Service) InitServices() {
 	newBroadcastService(s.grpcServer)
+	newExternalService(s.grpcServer)
 }

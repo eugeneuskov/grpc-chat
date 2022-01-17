@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package eugeneuskov.chat.external;
+option go_package = "proto/pb";
+
+service External {
+  rpc CreateUser(CreateUserRequest) returns (google.protobuf.Empty) {};
+}
+
+message CreateUserRequest {
+  string external_id = 1;
+  string login = 2;
+  string password = 3;
+  string username = 4;
+}
