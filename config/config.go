@@ -9,6 +9,10 @@ type App struct {
 	Port string `yaml:"app_port"`
 }
 
+type Auth struct {
+	HashSalt string `yaml:"hash_salt"`
+}
+
 type Database struct {
 	Host     string `yaml:"db_host"`
 	Port     string `yaml:"db_port"`
@@ -26,6 +30,7 @@ type Tls struct {
 
 type Config struct {
 	App
+	Auth
 	Database
 	Tls
 }

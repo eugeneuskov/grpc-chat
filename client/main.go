@@ -96,7 +96,7 @@ func main() {
 				Type:      "message",
 			})
 			if err != nil {
-				fmt.Printf("error sendong message: %s\n", err.Error())
+				fmt.Printf("error sending message: %s\n", err.Error())
 				break
 			}
 		}

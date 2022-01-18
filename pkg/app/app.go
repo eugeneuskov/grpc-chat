@@ -3,6 +3,7 @@ package app
 import (
 	"database/sql"
 	"github.com/eugeneuskov/grpc-chat/config"
+	"github.com/eugeneuskov/grpc-chat/pkg/api"
 	"github.com/eugeneuskov/grpc-chat/pkg/repositories"
 	"github.com/eugeneuskov/grpc-chat/pkg/server"
 	"github.com/eugeneuskov/grpc-chat/pkg/services"
@@ -30,8 +31,8 @@ func (a *Application) Run() {
 	a.server = server.NewServer(&a.config.Tls, &a.config.App)
 	a.server.InitGrpcServer()
 
-	serviceList := services.NewServices(repositories.NewRepositories(a.db))
-	services.NewGrpcServices(a.server.Grpc).InitServices(serviceList)
+	serviceList := services.NewServices(repositories.NewRepositories(a.db), &a.config.Auth)
+	api.NewGrpcServices(a.server.Grpc).InitServices(serviceList)
 
 	go a.server.Run()
 }

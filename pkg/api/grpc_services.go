@@ -1,6 +1,7 @@
-package services
+package api
 
 import (
+	"github.com/eugeneuskov/grpc-chat/pkg/services"
 	"google.golang.org/grpc"
 )
 
@@ -14,7 +15,7 @@ func NewGrpcServices(grpcServer *grpc.Server) *GrpcServices {
 	}
 }
 
-func (s *GrpcServices) InitServices(serviceList *Services) {
+func (s *GrpcServices) InitServices(serviceList *services.Services) {
 	newGrpcBroadcastService(s.grpcServer)
 	newGrpcExternalService(s.grpcServer, serviceList.ExternalAuth)
 }

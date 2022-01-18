@@ -1,8 +1,10 @@
-package services
+package api
 
 import (
 	"context"
 	"github.com/eugeneuskov/grpc-chat/pkg/server"
+	"github.com/eugeneuskov/grpc-chat/pkg/services"
+	"github.com/eugeneuskov/grpc-chat/pkg/structs"
 	"github.com/eugeneuskov/grpc-chat/proto/pb"
 	"github.com/golang/protobuf/ptypes/empty"
 	"google.golang.org/grpc"
@@ -14,7 +16,7 @@ import (
 const authHeaderName = "X-Access-Token"
 
 type grpcExternalService struct {
-	service ExternalAuth
+	service services.ExternalAuth
 }
 
 func (e *grpcExternalService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*emptypb.Empty, error) {
@@ -27,10 +29,23 @@ func (e *grpcExternalService) CreateUser(ctx context.Context, req *pb.CreateUser
 		return nil, status.Error(codes.Unauthenticated, "wrong token")
 	}
 
+	if err := e.service.CreateUser(createUserStruct(req)); err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
 	return &empty.Empty{}, nil
 }
 
-func newGrpcExternalService(s *grpc.Server, service ExternalAuth) {
+func createUserStruct(req *pb.CreateUserRequest) *structs.User {
+	return &structs.User{
+		ExternalId: req.GetExternalId(),
+		Login:      req.GetLogin(),
+		Password:   req.GetPassword(),
+		Username:   req.GetUsername(),
+	}
+}
+
+func newGrpcExternalService(s *grpc.Server, service services.ExternalAuth) {
 	if s != nil {
 		pb.RegisterExternalServer(s, &grpcExternalService{service: service})
 	}

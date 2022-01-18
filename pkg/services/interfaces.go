@@ -1,6 +1,8 @@
 package services
 
+import "github.com/eugeneuskov/grpc-chat/pkg/structs"
+
 type ExternalAuth interface {
 	CheckToken(token string) error
-	CreateUser() error
+	CreateUser(user *structs.User) error
 }
