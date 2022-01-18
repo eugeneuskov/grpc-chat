@@ -69,6 +69,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Couldnt connect to server: %s\n", err.Error())
 	}
+	defer conn.Close()
 
 	client = pb.NewBroadcastClient(conn)
 	user := &pb.User{
