@@ -7,16 +7,18 @@ import (
 	"github.com/eugeneuskov/grpc-chat/pkg/repositories"
 	"github.com/eugeneuskov/grpc-chat/pkg/server"
 	"github.com/eugeneuskov/grpc-chat/pkg/services"
+	"github.com/eugeneuskov/grpc-chat/pkg/workers"
 	"gorm.io/gorm"
 	"log"
 	"time"
 )
 
 type Application struct {
-	config *config.Config
-	server *server.Server
-	db     *gorm.DB
-	sqlDb  *sql.DB
+	config  *config.Config
+	server  *server.Server
+	db      *gorm.DB
+	sqlDb   *sql.DB
+	workers *workers.Workers
 }
 
 func NewApplication(config *config.Config) *Application {
@@ -34,6 +36,7 @@ func (a *Application) Run() {
 	serviceList := services.NewServices(repositories.NewRepositories(a.db), &a.config.Auth)
 	api.NewGrpcServices(a.server.Grpc).InitServices(serviceList)
 
+	go workers.NewWorkers(&a.config.Rabbit, serviceList).Run()
 	go a.server.Run()
 }
 
@@ -67,7 +70,8 @@ func (a *Application) Shutdown() {
 	} else {
 		println("DB closed")
 	}
-	// _ = a.server.Shutdown(context.Background())
+
+	a.server.Grpc.Stop()
 
 	println("OFF")
 }

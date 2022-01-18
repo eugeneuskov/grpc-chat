@@ -13,3 +13,8 @@ tls:
   ssl_mode: false
   ssl_cert_file: "-"
   ssl_key_file: "-"
+rabbit:
+  amqp_server_url: "amqp://admin:admin@localhost:15672/"
+  delay_workers_run: 15 # Количество секунд, до старта прослушивания очередей
+  queues:
+    create_user: "create_user" # Данные для создание пользователя

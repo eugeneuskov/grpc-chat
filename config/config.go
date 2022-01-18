@@ -28,11 +28,22 @@ type Tls struct {
 	KeyFile  string `yaml:"ssl_key_file"`
 }
 
+type Queues struct {
+	CreateUser string `yaml:"create_user"`
+}
+
+type Rabbit struct {
+	AmqpServerUrl   string `yaml:"amqp_server_url"`
+	DelayWorkersRun uint8  `yaml:"delay_workers_run"`
+	Queues
+}
+
 type Config struct {
 	App
 	Auth
 	Database
 	Tls
+	Rabbit
 }
 
 func (c *Config) Init() (*Config, error) {
