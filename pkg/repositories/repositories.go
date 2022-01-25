@@ -3,11 +3,13 @@ package repositories
 import "gorm.io/gorm"
 
 type Repositories struct {
-	ExternalAuth
+	External
+	Auth
 }
 
 func NewRepositories(db *gorm.DB) *Repositories {
 	return &Repositories{
-		ExternalAuth: newExternalAuthPostgres(db),
+		External: newExternalAuthPostgres(db),
+		Auth:     newAuthPostgres(db),
 	}
 }

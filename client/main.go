@@ -16,6 +16,7 @@ import (
 )
 
 var client pb.BroadcastClient
+var authClient pb.AuthClient
 var wg *sync.WaitGroup
 
 func init() {
@@ -57,13 +58,11 @@ func connect(user *pb.User) error {
 }
 
 func main() {
-	timestamp := time.Now()
 	done := make(chan int)
 
 	name := flag.String("N", "Anon", "The name of the user")
+	password := flag.String("P", "---", "Password of the user")
 	flag.Parse()
-
-	id := sha256.Sum256([]byte(timestamp.String() + *name))
 
 	conn, err := grpc.Dial("localhost:11011", grpc.WithInsecure())
 	if err != nil {
@@ -71,13 +70,34 @@ func main() {
 	}
 	defer conn.Close()
 
-	client = pb.NewBroadcastClient(conn)
-	user := &pb.User{
-		Id:   hex.EncodeToString(id[:]),
-		Name: *name,
+	/* AUTH */
+	authClient = pb.NewAuthClient(conn)
+
+	token, err := authClient.Login(context.Background(), &pb.LoginRequest{
+		Login:    *name,
+		Password: *password,
+	})
+	if err != nil {
+		log.Fatal(err.Error())
 	}
 
-	_ = connect(user)
+	userInfo, err := authClient.Info(context.Background(), &pb.InfoRequest{
+		Token: token.GetToken(),
+	})
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+
+	user := &pb.User{
+		Id:   userInfo.GetId(),
+		Name: userInfo.GetUsername(),
+	}
+
+	client = pb.NewBroadcastClient(conn)
+
+	if err = connect(user); err != nil {
+		log.Fatal(err.Error())
+	}
 
 	wg.Add(1)
 	go func() {
@@ -85,7 +105,7 @@ func main() {
 
 		scanner := bufio.NewScanner(os.Stdin)
 		timestamp := time.Now().String()
-		messageId := sha256.Sum256([]byte(timestamp + *name))
+		messageId := sha256.Sum256([]byte(timestamp + user.GetName()))
 
 		for scanner.Scan() {
 			_, err := client.SendMessage(context.Background(), &pb.Content{

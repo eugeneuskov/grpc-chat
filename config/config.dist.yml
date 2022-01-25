@@ -2,6 +2,8 @@ app:
   app_port: ":11011"
 auth:
   hash_salt: "salt" # Соль для хэширования паролей
+  singing_key: "singing-key" # Токен подписи jwt
+  tll: 12 # срок действия jwt в часах
 database:
   db_host: "127.0.0.1"
   db_port: "5432"

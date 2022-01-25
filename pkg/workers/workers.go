@@ -27,6 +27,6 @@ func (w *Workers) initWorkers() {
 	w.CreateUser = newCreateUserWorker(
 		w.rabbitConfig.AmqpServerUrl,
 		w.rabbitConfig.Queues.CreateUser,
-		w.services.ExternalAuth,
+		w.services.External,
 	)
 }

@@ -16,6 +16,7 @@ func NewGrpcServices(grpcServer *grpc.Server) *GrpcServices {
 }
 
 func (s *GrpcServices) InitServices(serviceList *services.Services) {
-	newGrpcBroadcastService(s.grpcServer)
-	newGrpcExternalService(s.grpcServer, serviceList.ExternalAuth)
+	newGrpcBroadcastService(s.grpcServer, serviceList.Auth)
+	newGrpcExternalService(s.grpcServer, serviceList.External)
+	newGrpcAuthService(s.grpcServer, serviceList.Auth)
 }

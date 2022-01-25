@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"github.com/eugeneuskov/grpc-chat/pkg/services"
 	"github.com/eugeneuskov/grpc-chat/proto/pb"
 	"google.golang.org/grpc"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -17,6 +18,7 @@ type connection struct {
 }
 
 type grpcBroadcastService struct {
+	service     services.Auth
 	connections []*connection
 }
 
@@ -73,8 +75,8 @@ func (b *grpcBroadcastService) send(content *pb.Content) {
 	<-done
 }
 
-func newGrpcBroadcastService(s *grpc.Server) {
+func newGrpcBroadcastService(s *grpc.Server, service services.Auth) {
 	if s != nil {
-		pb.RegisterBroadcastServer(s, &grpcBroadcastService{})
+		pb.RegisterBroadcastServer(s, &grpcBroadcastService{service: service})
 	}
 }

@@ -16,10 +16,10 @@ import (
 const authHeaderName = "X-Access-Token"
 
 type grpcExternalService struct {
-	service services.ExternalAuth
+	service services.External
 }
 
-func (e *grpcExternalService) CreateUser(ctx context.Context, req *pb.CreateUserRequest) (*emptypb.Empty, error) {
+func (e *grpcExternalService) CreateUser(ctx context.Context, request *pb.CreateUserRequest) (*emptypb.Empty, error) {
 	token, err := server.GetTokenByName(ctx, authHeaderName)
 	if err != nil {
 		return nil, err
@@ -29,7 +29,7 @@ func (e *grpcExternalService) CreateUser(ctx context.Context, req *pb.CreateUser
 		return nil, status.Error(codes.Unauthenticated, "wrong token")
 	}
 
-	if err := e.service.CreateUser(createUserStruct(req)); err != nil {
+	if err := e.service.CreateUser(createUserStruct(request)); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
@@ -45,7 +45,7 @@ func createUserStruct(req *pb.CreateUserRequest) *structs.User {
 	}
 }
 
-func newGrpcExternalService(s *grpc.Server, service services.ExternalAuth) {
+func newGrpcExternalService(s *grpc.Server, service services.External) {
 	if s != nil {
 		pb.RegisterExternalServer(s, &grpcExternalService{service: service})
 	}

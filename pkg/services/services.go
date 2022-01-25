@@ -6,7 +6,8 @@ import (
 )
 
 type Services struct {
-	ExternalAuth
+	External
+	Auth
 	authConfig *config.Auth
 }
 
@@ -15,6 +16,7 @@ func NewServices(
 	authConfig *config.Auth,
 ) *Services {
 	return &Services{
-		ExternalAuth: newExternalService(repositories.ExternalAuth, authConfig.HashSalt),
+		External: newExternalService(repositories.External, authConfig.HashSalt),
+		Auth:     newAuthService(repositories.Auth, authConfig),
 	}
 }

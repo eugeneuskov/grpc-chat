@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package eugeneuskov.chat.auth;
+option go_package = "proto/pb";
+
+service Auth {
+  rpc Login(LoginRequest) returns (LoginResponse) {};
+  rpc Info(InfoRequest) returns (InfoResponse) {};
+}
+
+message LoginRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message LoginResponse {
+  string token = 1;
+}
+
+message InfoRequest {
+  string token = 1;
+}
+
+message InfoResponse {
+  string id = 1;
+  string username = 2;
+}

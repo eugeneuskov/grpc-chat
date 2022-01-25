@@ -12,7 +12,7 @@ import (
 type createUserWorker struct {
 	amqpServerUrl string
 	queueName     string
-	service       services.ExternalAuth
+	service       services.External
 }
 
 func (c *createUserWorker) Start() {
@@ -77,6 +77,6 @@ func (c *createUserWorker) validate(message []byte) (*structs.User, error) {
 	return &user, nil
 }
 
-func newCreateUserWorker(amqpServerUrl, queueName string, service services.ExternalAuth) *createUserWorker {
+func newCreateUserWorker(amqpServerUrl, queueName string, service services.External) *createUserWorker {
 	return &createUserWorker{amqpServerUrl, queueName, service}
 }

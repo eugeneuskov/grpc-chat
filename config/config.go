@@ -10,7 +10,9 @@ type App struct {
 }
 
 type Auth struct {
-	HashSalt string `yaml:"hash_salt"`
+	HashSalt   string `yaml:"hash_salt"`
+	SingingKey string `yaml:"singing_key"`
+	Tll        uint8  `yaml:"tll"`
 }
 
 type Database struct {
